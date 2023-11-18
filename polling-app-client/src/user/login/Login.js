@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { login } from '../../util/APIUtils';
 import './Login.css';
 import { Link } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../constants';
 
-import { Form, Input, Button, Icon } from 'antd';
+import { Form, Input, Button, Icon, notification } from 'antd';
 const FormItem = Form.Item;
 
 class Login extends Component {
@@ -27,8 +29,28 @@ class LoginForm extends Component {
 
     handleSubmit(event) {
         event.preventDefault();   
-        
-        //call api login
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                const loginRequest = Object.assign({}, values);
+                login(loginRequest)
+                .then(response => {
+                    localStorage.setItem(ACCESS_TOKEN, response.accessToken);
+                    this.props.onLogin();
+                }).catch(error => {
+                    if(error.status === 401) {
+                        notification.error({
+                            message: 'Polling App',
+                            description: 'Your Username or Password is incorrect. Please try again!'
+                        });                    
+                    } else {
+                        notification.error({
+                            message: 'Polling App',
+                            description: error.message || 'Sorry! Something went wrong. Please try again!'
+                        });                                            
+                    }
+                });
+            }
+        });
     }
 
     render() {
