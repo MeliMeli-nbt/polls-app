@@ -1,7 +1,8 @@
 package utc.cntt2.k61.pollsappserver.domain;
 
-import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
