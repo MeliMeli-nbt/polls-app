@@ -1,6 +1,7 @@
 package utc.cntt2.k61.pollsappserver.domain;
 
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "votes", uniqueConstraints = {

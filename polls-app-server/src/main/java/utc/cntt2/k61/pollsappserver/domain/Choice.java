@@ -1,8 +1,8 @@
 package utc.cntt2.k61.pollsappserver.domain;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "choices")
@@ -14,6 +14,13 @@ public class Choice extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "poll_id", nullable = false)
     private Poll poll;
+
+    public Choice() {
+    }
+
+    public Choice(String text) {
+        this.text = text;
+    }
 
     public String getText() {
         return text;
