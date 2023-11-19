@@ -43,7 +43,7 @@ public class PollingAppDBConfig {
     }
 
     @Primary
-    @Bean(name = "pollsAppEntityManagerFactoryRef")
+    @Bean(name = "pollsAppTransactionManagerRef")
     public PlatformTransactionManager transactionManager(
             @Qualifier("pollsAppEntityManagerFactoryRef") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
