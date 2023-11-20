@@ -1,5 +1,7 @@
 package utc.cntt2.k61.pollsappserver.config;
 
+import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableTransactionManagement
@@ -23,6 +27,9 @@ import javax.sql.DataSource;
         entityManagerFactoryRef = "pollsAppEntityManagerFactoryRef",
         transactionManagerRef = "pollsAppTransactionManagerRef")
 public class PollingAppDBConfig {
+    @Autowired
+    Environment environment;
+
     @Primary
     @Bean(name = "pollsAppDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.polling-app")
@@ -35,10 +42,20 @@ public class PollingAppDBConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(
             EntityManagerFactoryBuilder builder,
             @Qualifier("pollsAppDataSource") DataSource dataSource) {
+        Map<String, Object> properties = new HashMap<>();
+        String ddlAuto = environment.getProperty("spring.jpa.hibernate.ddl-auto");
+        if (ddlAuto != null) {
+            properties.put("hibernate.hbm2ddl.auto", ddlAuto);
+        }
+        String dialect = environment.getProperty("spring.jpa.properties.hibernate.dialect");
+        if (dialect != null) {
+            properties.put("hibernate.dialect", dialect);
+        }
         return builder
                 .dataSource(dataSource)
                 .packages("utc.cntt2.k61.pollsappserver.domain")
                 .persistenceUnit("pollsApp")
+                .properties(properties)
                 .build();
     }
 
