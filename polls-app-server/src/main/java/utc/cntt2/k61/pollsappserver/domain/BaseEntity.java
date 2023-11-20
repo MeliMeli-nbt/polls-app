@@ -29,8 +29,8 @@ public class BaseEntity {
     @Column(name = "created_by")
     private Long createdBy;
 
-    @Column(name = "deleted")
-    private boolean deleted;
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted = false;
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
