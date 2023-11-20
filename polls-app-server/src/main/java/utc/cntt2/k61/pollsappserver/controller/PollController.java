@@ -8,13 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import utc.cntt2.k61.pollsappserver.domain.Poll;
-import utc.cntt2.k61.pollsappserver.dto.ApiResponse;
-import utc.cntt2.k61.pollsappserver.dto.PollRequest;
-import utc.cntt2.k61.pollsappserver.dto.PollResponse;
-import utc.cntt2.k61.pollsappserver.dto.VoteRequest;
+import utc.cntt2.k61.pollsappserver.dto.*;
 import utc.cntt2.k61.pollsappserver.security.CurrentUser;
 import utc.cntt2.k61.pollsappserver.security.UserPrincipal;
 import utc.cntt2.k61.pollsappserver.service.PollService;
+import utc.cntt2.k61.pollsappserver.util.AppConstants;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -28,6 +26,13 @@ public class PollController {
     @Autowired
     public PollController(PollService pollService) {
         this.pollService = pollService;
+    }
+
+    @GetMapping
+    public PagedResponse<PollResponse> getPolls(@CurrentUser UserPrincipal currentUser,
+                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return pollService.getAllPolls(currentUser, page, size);
     }
 
     @PostMapping
